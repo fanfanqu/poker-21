@@ -1,4 +1,4 @@
-let {getFormattedInputs,getNumbers,getSum,getSumIncludesA}=require('../src/main');
+let {getFormattedInputs, getNumbers,getSum,getSumPointA,getSumPointB,getCompared}=require('../src/main');
  describe('poker21', function() {
   it('getFormattedInputs', function() {
       let inputs='Q-2-3';
@@ -6,22 +6,35 @@ let {getFormattedInputs,getNumbers,getSum,getSumIncludesA}=require('../src/main'
       let expected = ["Q", "2", "3"];
       expect(formattedInputs).toEqual(expected);
   });
-   it('getNumber',function () {
-       let formattedInputs = ["Q", "2", "3"];
+   it('getNumbers',function () {
+       let formattedInputs = ["Q", "A", "3"];
        let formattedArray = getNumbers(formattedInputs);
-       let expected = ['10','2','3'];
+       let expected = ['10','A','3'];
        expect(formattedArray).toEqual(expected);
    }) ;
-     it('getSumWithOutA',function () {
-         let formattedArray=['10','2','3'];
-         let sum=getSum(formattedArray);
-         let expected = 15;
+     it('getSum',function () {
+         let formattedArray = ["10", "A", "3"];
+         let sum = getSum(formattedArray);
+         let expected = 14;
          expect(sum).toEqual(expected);
      })
-     it('getSumWithA',function () {
-         let formattedArray = ['1','A','3'];
-         let sumWithA = getSumIncludesA(formattedArray);
+     it('getSumPointA',function () {
+         let stringA = "3-4-5-3";
+         let sumA = getSumPointA(stringA);
          let expected = 15;
-         expect(sumWithA).toEqual(expected);
-     })
+         expect(sumA).toEqual(expected);
+     });
+     it('getSumPointB',function () {
+         let stringB = "3-Q-A";
+         let sumB = getSumPointB(stringB);
+         let expected = 15;
+         expect(sumB).toEqual(expected); 
+     });
+     it('getSumPointB',function () {
+         let inputA = "3-Q-A";
+         let inputB = "1-5-7"
+         let result = getCompared(inputA, inputB);
+         let expected ="winner：A";
+         expect(sumB).toEqual(expected);
+     });
 });
