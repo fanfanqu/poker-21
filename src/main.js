@@ -1,94 +1,74 @@
 'use strict';
 let _ = require('lodash');
-//let inputs = 'Q-2-3';
-
-function getFormattedInputs(inputs) {
-    return _.chain(inputs)
-        .split('-')
-        .value();
+let inputB = 'Q-8';
+let inputA = '10-3-5';
+function getFormattedInputs(inputA) {
+    return _.split(inputA, '-');
 }
-function getNumbers(formattedInputs) {
-    let result = _.chain(formattedInputs)
-        .map(n=> {
-            if (n === 'J' || n === 'Q' || n === 'K') {
-                return _.chain(n).replace(n, 10).value();
-            } else {
-                return n;
-            }
-        })
-        .value();
+function getNumbers(formattedInput) {
+    let result = formattedInput.map(n=> {
+        if (n === 'J' || n === 'Q' || n === 'K') {
+            return '10';
+        } else {
+            return n;
+        }
+    })
     return result;
 }
 function getSum(formattedArray) {
-    if (formattedArray.includes('A')) {
-        let result = _.chain(formattedArray)
-            .map(n=> {
-                if (n === 'A') {
-                    return _.chain(n).replace(n, 1).value()
-                } else {
-                    return n;
-                }
-            }).value();
-        let sum = _.chain(result).map(n=>parseInt(n)).sum().value();
-        if (sum <= 11) {
-            sum = sum + 10;
-        } else {
-            return sum;
-        }
+    let sum = _(formattedArray).map(x=> {
+        return x === 'A' ? 1 : parseInt(x);
+    }).sum();
+    if (sum <= 11) {
+        sum += 10;
     } else {
-        return _.chain(formattedArray).map(n=>parseInt(n)).sum().value();
+        return sum;
     }
+    return sum;
 }
-let inputA = 'A-Q-Q';
-let inputB = 'A-5-6';
-function getSumPointA(inputA) {
-    let formattedA = getFormattedInputs(inputA);
-    let ArrayA = getNumbers(formattedA);
-    let sumA = getSum(ArrayA);
-    return sumA;
-}
-console.log(getSumPointA(inputA));
-function getSumPointB(inputB) {
-    let formattedB = getFormattedInputs(inputB);
-    let ArrayB = getNumbers(formattedB);
-    let sumB = getSum(ArrayB);
-    return sumB;
-}
-console.log(getSumPointB(inputB));
-function getCompared(inputA, inputB) {
+
+function getCompared(sumA, sumB) {
     let aLength = getFormattedInputs(inputA).length;
     let bLength = getFormattedInputs(inputB).length;
-    let a = getSumPointA(inputA);
-    let b = getSumPointB(inputB);
-    if (a > 21 && b > 21) {
+    if (sumA > 21 && sumB > 21) {
         return "a and b tied";
-    } else if (a <= 21 && b > 21) {
+    } else if (sumA <= 21 && sumB > 21) {
         return "winner: A"
-    } else if (a > 21 && b <= 21) {
+    } else if (sumA > 21 && sumB <= 21) {
         return "winner: B";
-    } else if (a <= 21 && b <= 21) {
-        if (a === b) {
-            if (aLength === bLength) {
-                return 'A & B tied';
-            } else {
-                if (aLength > bLength) {
-                    return 'winner:B';
-                } else {
-                    return 'winner:A';
-                }
-            }
+    } else if (sumA <= 21 && sumB <= 21) {
+        if (sumA === sumB && aLength === bLength) {
+            return 'A & B tied';
+        } else if (sumA === sumB && aLength < bLength) {
+            return 'winner:A';
+        } else if (sumA === sumB && aLength > bLength) {
+            return 'winner:B';
+        } else if (sumA > sumB) {
+            return 'winner：A';
         } else {
-            if (a > b) {
-                return 'winner：A';
-            } else {
-                return 'winner:B';
-            }
+            return 'winner:B';
         }
+
     }
+
+
 }
-function game(inputA, inputB) {
-    let result = getCompared(inputA, inputB);
+function print(inputA, inputB) {
+    let formattedA = getFormattedInputs(inputA);
+    let numberA = getNumbers(formattedA);
+    let sumA = getSum(numberA);
+    let formattedB = getFormattedInputs(inputB);
+    let numberB = getNumbers(formattedB);
+    let sumB = getSum(numberB);
+    let result = getCompared(sumA, sumB);
     return result;
+
 }
-console.log(game(inputA, inputB));
-module.exports = {getFormattedInputs, getNumbers, getSum, getSumPointA, getSumPointB, getCompared};
+print(inputA, inputB);
+module.exports = {
+    getFormattedInputs,
+    getNumbers,
+    getSum,
+    getCompared,
+    print
+};
