@@ -1,7 +1,7 @@
 'use strict';
 let _ = require('lodash');
-let inputB = 'Q-8';
-let inputA = '10-3-5';
+let inputB = 'Q-3-5';
+let inputA = '10-8';
 function getFormattedInputs(inputA) {
     return _.split(inputA, '-');
 }
@@ -27,31 +27,29 @@ function getSum(formattedArray) {
     return sum;
 }
 
-function getCompared(sumA, sumB) {
+function getCompared(sumA, sumB, inputA, inputB) {
     let aLength = getFormattedInputs(inputA).length;
     let bLength = getFormattedInputs(inputB).length;
     if (sumA > 21 && sumB > 21) {
-        return "a and b tied";
-    } else if (sumA <= 21 && sumB > 21) {
-        return "winner: A"
+        return "A & B tied";
     } else if (sumA > 21 && sumB <= 21) {
-        return "winner: B";
+        return "winner:B";
+    } else if (sumA <= 21 && sumB > 21) {
+        return "winner:A";
     } else if (sumA <= 21 && sumB <= 21) {
-        if (sumA === sumB && aLength === bLength) {
-            return 'A & B tied';
-        } else if (sumA === sumB && aLength < bLength) {
-            return 'winner:A';
+        if (aLength === bLength && sumA === sumB) {
+            return "A & B tied";
         } else if (sumA === sumB && aLength > bLength) {
-            return 'winner:B';
-        } else if (sumA > sumB) {
-            return 'winner：A';
-        } else {
-            return 'winner:B';
+            return "winner:B";
+        } else if (sumA === sumB && aLength < bLength) {
+            return "winner:A";
+        } else if (sumA > sumB && sumA !== sumB) {
+            return "winner:A";
+        } else if (sumA < sumB && sumA !== sumB) {
+            return "winner:B";
         }
 
     }
-
-
 }
 function print(inputA, inputB) {
     let formattedA = getFormattedInputs(inputA);
@@ -64,6 +62,7 @@ function print(inputA, inputB) {
     return result;
 
 }
+
 print(inputA, inputB);
 module.exports = {
     getFormattedInputs,
