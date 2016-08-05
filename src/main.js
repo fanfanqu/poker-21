@@ -1,66 +1,38 @@
 'use strict';
 let _ = require('lodash');
-let inputB = 'Q-3-5';
-let inputA = '10-8';
-function getFormattedInputs(inputA) {
-    return _.split(inputA, '-');
+function getFormattedInputs(input) {
+    return _.split(input, '-');
 }
 function getNumbers(formattedInput) {
-    let result = formattedInput.map(n=> {
-        if (n === 'J' || n === 'Q' || n === 'K') {
-            return '10';
-        } else {
-            return n;
-        }
-    })
-    return result;
+   return _.map(formattedInput,n=>{
+       let isJqk= ['J','Q','K'].includes(n);
+       return isJqk?'10':n;
+   });
 }
 function getSum(formattedArray) {
     let sum = _(formattedArray).map(x=> {
         return x === 'A' ? 1 : parseInt(x);
     }).sum();
-    if (sum <= 11) {
-        sum += 10;
-    } else {
-        return sum;
-    }
-    return sum;
+    return sum <= 11 ? sum + 10 : sum;
 }
-
+let inputB = 'Q-3-5';
+let inputA = '10-8';
 function getCompared(sumA, sumB, inputA, inputB) {
-    let aLength = getFormattedInputs(inputA).length;
-    let bLength = getFormattedInputs(inputB).length;
-    if (sumA > 21 && sumB > 21) {
-        return "A & B tied";
-    } else if (sumA > 21 && sumB <= 21) {
-        return "winner:B";
-    } else if (sumA <= 21 && sumB > 21) {
-        return "winner:A";
-    } else if (sumA <= 21 && sumB <= 21) {
-        if (aLength === bLength && sumA === sumB) {
-            return "A & B tied";
-        } else if (sumA === sumB && aLength > bLength) {
-            return "winner:B";
-        } else if (sumA === sumB && aLength < bLength) {
-            return "winner:A";
-        } else if (sumA > sumB && sumA !== sumB) {
-            return "winner:A";
-        } else if (sumA < sumB && sumA !== sumB) {
-            return "winner:B";
-        }
-
-    }
+    let aLength = _.split(inputA, '-').length;
+    let bLength = _.split(inputB, '-').length;
+    if (sumA > 21 && sumB > 21) return "A & B tied";
+    if (sumA > 21) return "winner:B";
+    if (sumB > 21) return "winner:A";
+    if (sumA > sumB) return "winner:A";
+    if (sumB > sumA) return "winner:B";
+    if (aLength > bLength) return "winner:B";
+    if (bLength > aLength) return "winner:A";
+    return "A & B tied";
 }
 function print(inputA, inputB) {
-    let formattedA = getFormattedInputs(inputA);
-    let numberA = getNumbers(formattedA);
-    let sumA = getSum(numberA);
-    let formattedB = getFormattedInputs(inputB);
-    let numberB = getNumbers(formattedB);
-    let sumB = getSum(numberB);
-    let result = getCompared(sumA, sumB);
-    return result;
-
+    let sumA = getSum(getNumbers(getFormattedInputs(inputA)));
+    let sumB = getSum(getNumbers(getFormattedInputs(inputB)));
+    return  getCompared(sumA, sumB,inputA,inputB);
 }
 
 print(inputA, inputB);
